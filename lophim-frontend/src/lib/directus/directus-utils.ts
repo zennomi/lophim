@@ -7,5 +7,9 @@ export function getDirectusAssetURL(fileOrString: string | DirectusFile | null |
         return `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${fileOrString}`;
     }
 
+    if (fileOrString.filename_disk) {
+        return `${process.env.NEXT_PUBLIC_DIRECTUS_CDN_URL}/${fileOrString.filename_disk}`;
+    }
+
     return `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${fileOrString.id}`;
 }
