@@ -3,12 +3,7 @@ import screenVertexShader from "data-text:~/assets/shaders/screen-vrt"
 import type { PlasmoCSConfig } from "plasmo"
 
 export const config: PlasmoCSConfig = {
-  matches: [
-    "http://*.youtube.com/*",
-    "https://*.youtube.com/*",
-    "file:///*",
-    "http://localhost:3000/*"
-  ],
+  matches: ["http://*.youtube.com/*", "https://*.youtube.com/*"],
   all_frames: true
 }
 

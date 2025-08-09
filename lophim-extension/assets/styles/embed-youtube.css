@@ -1,0 +1,27 @@
+.ytp-pause-overlay-container {
+  display: none !important;
+}
+
+.ytp-gradient-top {
+  display: none !important;
+}
+
+.ytp-chrome-top {
+  display: none !important;
+}
+
+.ytp-impression-link {
+  display: none !important;
+}
+
+.ytp-tooltip-bg {
+  display: none !important;
+}
+
+.ytp-tooltip-edu {
+  display: none !important;
+}
+
+.yt-uix-sessionlink {
+  display: none !important;
+}
