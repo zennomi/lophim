@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
-import FocusModButton from './focus-button';
-import WatchContainer from './watch-container';
+import FocusModButton from '../../../../components/rophim/xem-phim/focus-button';
+import Player from '../../../../components/rophim/xem-phim/player';
+import WatchContainer from '../../../../components/rophim/xem-phim/watch-container';
 import { ArrowLeft } from 'lucide-react';
 
 export default function XemPhimPage() {
@@ -17,11 +18,7 @@ export default function XemPhimPage() {
                     </div>
                     <div className='player-ratio'>
                         <div className='aspect-video'>
-                            <iframe
-                                className='h-full w-full'
-                                src='https://www.youtube.com/embed/MZMFn0InOro?token=GM2IS4T1DBD8WEI1I171'
-                                allowFullScreen
-                            />
+                            <Player />
                         </div>
                         <div className='line-center player-control'>
                             <div className='line-center control-items'>

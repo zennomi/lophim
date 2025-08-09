@@ -7040,12 +7040,13 @@ body {
 }
 
 #body-load {
-    position: fixed;
+    position: absolute;
     z-index: 1000;
     top: 0;
     right: 0;
     bottom: 0;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color: var(--bg-color);
     animation: body-load-effect 1.5s forwards;
 }
