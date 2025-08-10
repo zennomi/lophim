@@ -16,6 +16,8 @@ export const fetchTopMovies = async () => {
                                 movie: [
                                     'id',
                                     'title',
+                                    'english_title',
+                                    'original_title',
                                     'slug',
                                     {
                                         poster: ['id', 'filename_disk']
@@ -30,7 +32,10 @@ export const fetchTopMovies = async () => {
                                         title_image: ['id', 'filename_disk']
                                     },
                                     'overview',
-                                    'tags'
+                                    'tags',
+                                    {
+                                        latest_episode: ['id', 'title', 'slug']
+                                    }
                                 ]
                             }
                         }
@@ -81,4 +86,44 @@ export const fetchNewMovies = async () => {
     );
 
     return newMovies;
+};
+
+export const fetchMovieBySlug = async (slug: string) => {
+    const { directus, readItems } = useDirectus();
+
+    const movie = await directus.request(
+        readItems('movie', {
+            fields: [
+                'id',
+                'title',
+                'english_title',
+                'slug',
+                'overview',
+                'tags',
+                {
+                    poster: ['id', 'filename_disk'],
+                    horizontal_poster: ['id', 'filename_disk'],
+                    backdrop: ['id', 'filename_disk'],
+                    title_image: ['id', 'filename_disk'],
+                    latest_episode: ['id', 'title', 'slug']
+                }
+            ],
+            filter: { slug: { _eq: slug } }
+        })
+    );
+
+    if (movie.length === 0) {
+        return null;
+    }
+
+    const movieData = movie[0];
+
+    const episodes = await directus.request(
+        readItems('episode', {
+            fields: ['id', 'title', 'slug'],
+            filter: { movie: { _eq: movieData.id } }
+        })
+    );
+
+    return { ...movieData, episodes };
 };

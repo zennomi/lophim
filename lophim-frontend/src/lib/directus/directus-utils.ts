@@ -1,6 +1,10 @@
-import { DirectusFile } from '../../types/directus-schema';
+import { DirectusFile } from '@directus/sdk';
 
-export function getDirectusAssetURL(fileOrString: string | DirectusFile | null | undefined): string {
+import { DirectusFile as DirectusFileSchema } from '../../types/directus-schema';
+
+export function getDirectusAssetURL(
+    fileOrString: string | DirectusFile | null | undefined | DirectusFileSchema
+): string {
     if (!fileOrString) return '';
 
     if (typeof fileOrString === 'string') {

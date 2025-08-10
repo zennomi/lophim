@@ -1,28 +1,38 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 import Actors from '@/components/rophim/actors';
 import CommentArea from '@/components/rophim/comment-area';
+import TopMovies from '@/components/rophim/phim/top-movies';
+import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
+import { fetchMovieBySlug, fetchTopMovies } from '@/lib/directus/fetchers';
+import { getEpisodeUrlFromSlug } from '@/lib/utils';
 
-import ContentGap from './content-gap';
-import DetailMore from './detail-more';
+import ContentGap from '../../../../components/rophim/phim/content-gap';
+import DetailMore from '../../../../components/rophim/phim/detail-more';
 import { Heart, MessageCircle, Play, Share2 } from 'lucide-react';
 
-export default function PhimPage() {
+export default async function PhimPage({ params }: { params: { slug: string } }) {
+    const { slug } = await params;
+    const movie = await fetchMovieBySlug(slug);
+    const topMovies = await fetchTopMovies();
+    if (!movie) {
+        return notFound();
+    }
+
     return (
         <>
             <div className='top-detail-wrap'>
                 <div
                     className='background-fade'
                     style={{
-                        backgroundImage:
-                            'url("https://static.nutscdn.com/vimg/1920-0/f105d609e2cc3c8ce1c29f999f42bb9d.webp")'
+                        backgroundImage: `url(${getDirectusAssetURL(movie.backdrop)})`
                     }}></div>
                 <div className='cover-fade'>
                     <div
                         className='cover-image'
                         style={{
-                            backgroundImage:
-                                'url("https://static.nutscdn.com/vimg/1920-0/161625de0f2c34ec4795140b44bed834.webp")'
+                            backgroundImage: `url(${getDirectusAssetURL(movie.horizontal_poster)})`
                         }}></div>
                 </div>
             </div>
@@ -33,15 +43,15 @@ export default function PhimPage() {
                             <div className='v-thumb-l mb-3'>
                                 <div className='v-thumbnail'>
                                     <img
-                                        alt='Xem Phim Superman Vietsub HD Online - Rophim'
+                                        alt={`Xem Phim ${movie.title} Vietsub HD Online - Lophim`}
                                         loading='lazy'
-                                        src='https://static.nutscdn.com/vimg/300-0/b987711629ddc4e21645a4e8af96e60d.webp'
+                                        src={getDirectusAssetURL(movie.poster)}
                                     />
                                 </div>
                             </div>
-                            <h2 className='heading-md media-name'>Superman</h2>
-                            <div className='alias-name'>Superman</div>
-                            <DetailMore />
+                            <h2 className='heading-md media-name'>{movie.title}</h2>
+                            <div className='alias-name'>{movie.english_title}</div>
+                            <DetailMore movie={movie} />
                         </div>
                         {/* Top phim tuần này */}
                         <div className='child-box child-top'>
@@ -66,97 +76,7 @@ export default function PhimPage() {
                                 <span>Top phim tuần này</span>
                             </div>
                             <div className='child-content'>
-                                <div className='cc-top'>
-                                    {/* Only 3 items for brevity, add more as needed */}
-                                    <div className='item'>
-                                        <div className='position'>1</div>
-                                        <div className='h-item'>
-                                            <div className='v-thumb-m'>
-                                                <Link className='v-thumbnail' href='/phim/thu-quyen-nhat-mong.0K8gX7R4'>
-                                                    <img
-                                                        alt='Thư Quyển Nhất Mộng'
-                                                        src='https://static.nutscdn.com/vimg/300-0/a9f85e0911d4873c0f5a61b95325986c.webp'
-                                                    />
-                                                </Link>
-                                            </div>
-                                            <div className='info'>
-                                                <h4 className='item-title lim-2'>
-                                                    <Link
-                                                        title='Thư Quyển Nhất Mộng'
-                                                        href='/phim/thu-quyen-nhat-mong.0K8gX7R4'>
-                                                        Thư Quyển Nhất Mộng
-                                                    </Link>
-                                                </h4>
-                                                <div className='alias-title lim-1 mb-2'>A Dream Within a Dream</div>
-                                                <div className='info-line'>
-                                                    <div className='tag-small'>
-                                                        <strong>T13</strong>
-                                                    </div>
-                                                    <div className='tag-small'>Phần 1</div>
-                                                    <div className='tag-small'>Tập 40</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='item'>
-                                        <div className='position'>2</div>
-                                        <div className='h-item'>
-                                            <div className='v-thumb-m'>
-                                                <Link className='v-thumbnail' href='/phim/kien-tuong.vDFJBjKv'>
-                                                    <img
-                                                        alt='Kiện Tướng'
-                                                        src='https://static.nutscdn.com/vimg/300-0/7a6d6a456fe14c149ea625fd0178d38e.jpg'
-                                                    />
-                                                </Link>
-                                            </div>
-                                            <div className='info'>
-                                                <h4 className='item-title lim-2'>
-                                                    <Link title='Kiện Tướng' href='/phim/kien-tuong.vDFJBjKv'>
-                                                        Kiện Tướng
-                                                    </Link>
-                                                </h4>
-                                                <div className='alias-title lim-1 mb-2'>Good Boy</div>
-                                                <div className='info-line'>
-                                                    <div className='tag-small'>
-                                                        <strong>T16</strong>
-                                                    </div>
-                                                    <div className='tag-small'>Phần 1</div>
-                                                    <div className='tag-small'>Tập 14</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='item'>
-                                        <div className='position'>3</div>
-                                        <div className='h-item'>
-                                            <div className='v-thumb-m'>
-                                                <Link className='v-thumbnail' href='/phim/nguu-lang-chuc-nu.4tDukPxp'>
-                                                    <img
-                                                        alt='Ngưu Lang Chức Nữ'
-                                                        src='https://static.nutscdn.com/vimg/300-0/dae02bd86bbe90c51c89cca05aa4b783.jpg'
-                                                    />
-                                                </Link>
-                                            </div>
-                                            <div className='info'>
-                                                <h4 className='item-title lim-2'>
-                                                    <Link
-                                                        title='Ngưu Lang Chức Nữ'
-                                                        href='/phim/nguu-lang-chuc-nu.4tDukPxp'>
-                                                        Ngưu Lang Chức Nữ
-                                                    </Link>
-                                                </h4>
-                                                <div className='alias-title lim-1 mb-2'>Head Over Heels</div>
-                                                <div className='info-line'>
-                                                    <div className='tag-small'>
-                                                        <strong>T13</strong>
-                                                    </div>
-                                                    <div className='tag-small'>Phần 1</div>
-                                                    <div className='tag-small'>Tập 8</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <TopMovies topMovies={topMovies} />
                             </div>
                         </div>
                         {/* Diễn viên */}
@@ -165,12 +85,14 @@ export default function PhimPage() {
                     <div className='dc-main'>
                         <div className='dm-bar'>
                             <div className='elements'>
-                                <Link
-                                    className='btn btn-xl btn-rounded button-play flex-shrink-0'
-                                    href='/xem-phim/superman.2oiIHdCZ'>
-                                    <Play size={20} style={{ marginRight: 8 }} />
-                                    <span>Xem Ngay</span>
-                                </Link>
+                                {movie.latest_episode && (
+                                    <Link
+                                        className='btn btn-xl btn-rounded button-play flex-shrink-0'
+                                        href={getEpisodeUrlFromSlug(movie.latest_episode)}>
+                                        <Play size={20} style={{ marginRight: 8 }} />
+                                        <span>Xem Ngay</span>
+                                    </Link>
+                                )}
                                 <div className='touch-group flex-grow-1'>
                                     <div className='is-left flex-grow-1'>
                                         <div className='item item-like'>
@@ -222,7 +144,7 @@ export default function PhimPage() {
                                         <div className='v-rating'>
                                             <div className='ro-rating'>
                                                 <div className='ro-icon'></div>
-                                                <span className='point'>8.0</span>
+                                                <span className='point'>3.6</span>
                                                 <span className='a-rate'>Đánh giá</span>
                                             </div>
                                         </div>
@@ -230,7 +152,7 @@ export default function PhimPage() {
                                 </div>
                             </div>
                         </div>
-                        <ContentGap />
+                        <ContentGap movie={movie} topMovies={topMovies} />
                         <CommentArea />
                     </div>
                 </div>
