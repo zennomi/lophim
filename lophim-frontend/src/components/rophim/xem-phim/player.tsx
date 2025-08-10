@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from 'react';
 
+import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
+import { fetchEpisodeById } from '@/lib/directus/fetchers';
 import { cn } from '@/lib/utils';
+import { DirectusFile } from '@directus/sdk';
 
-export default function Player() {
+type Episode = NonNullable<Awaited<ReturnType<typeof fetchEpisodeById>>>;
+
+export default function Player({ episode }: { episode: Episode }) {
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
@@ -23,7 +28,7 @@ export default function Player() {
         <div className='relative h-full w-full'>
             <iframe
                 className={cn('h-full w-full', !ready && 'hidden')}
-                src='https://www.youtube.com/embed/lTet7rASZZs?lophimToken=21LNJ9J1PYDNWXSHCSFF&lophimThumbnail=https://goatembed.com/images/denied-bg.webp'
+                src={`https://www.youtube.com/embed/${episode.youtube_id}?lophimToken=${episode.token}&lophimThumbnail=${getDirectusAssetURL(episode.movie.backdrop as DirectusFile)}`}
                 allowFullScreen
                 allow='autoplay; encrypted-media; fullscreen'
             />

@@ -1,11 +1,13 @@
 import Link from 'next/link';
 
+import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
 import { fetchMovieBySlug } from '@/lib/directus/fetchers';
 import { getEpisodeUrlFromSlug } from '@/lib/utils';
+import { DirectusFile } from '@directus/sdk';
 
 type Movie = NonNullable<Awaited<ReturnType<typeof fetchMovieBySlug>>>;
 
-export default function EpisodesList({ movie }: { movie: Movie }) {
+export default function EpisodesList({ movie, currentEpisodeId }: { movie: Movie; currentEpisodeId?: number }) {
     return (
         <div className='cg-body-box is-eps'>
             <div className='box-header'>
@@ -17,9 +19,9 @@ export default function EpisodesList({ movie }: { movie: Movie }) {
                         <Link key={episode.id} className='item pd' href={getEpisodeUrlFromSlug(episode)}>
                             <div className='m-thumbnail'>
                                 <img
-                                    alt='Xem Phim Superman Vietsub HD Online - Rophim'
+                                    alt={movie.title}
                                     loading='lazy'
-                                    src='https://static.nutscdn.com/vimg/300-0/0e190589111b3c28e1451cde7b82ca3e.jpg'
+                                    src={getDirectusAssetURL(movie.poster as DirectusFile)}
                                 />
                             </div>
                             <div className='info'>
@@ -30,7 +32,11 @@ export default function EpisodesList({ movie }: { movie: Movie }) {
                                     <span>Phụ đề</span>
                                 </div>
                                 <div className='media-title lim-2 mb-0'>{episode.title}</div>
-                                <div className='btn btn-sm btn-light'>Xem tập này</div>
+                                {currentEpisodeId === episode.id ? (
+                                    <div className='btn btn-sm btn-light'>Đang xem</div>
+                                ) : (
+                                    <div className='btn btn-sm btn-light'>Xem tập này</div>
+                                )}
                             </div>
                         </Link>
                     ))}

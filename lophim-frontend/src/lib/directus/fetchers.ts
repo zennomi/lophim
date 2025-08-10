@@ -127,3 +127,59 @@ export const fetchMovieBySlug = async (slug: string) => {
 
     return { ...movieData, episodes };
 };
+
+export const fetchEpisodeById = async (id: number) => {
+    const { directus, readItems } = useDirectus();
+
+    const episode = await directus.request(
+        readItems('episode', {
+            fields: [
+                'id',
+                'title',
+                'slug',
+                'youtube_id',
+                'token',
+                {
+                    movie: [
+                        'id',
+                        'title',
+                        'english_title',
+                        'original_title',
+                        'overview',
+                        'tags',
+                        'slug',
+                        {
+                            poster: ['id', 'filename_disk'],
+                            horizontal_poster: ['id', 'filename_disk'],
+                            backdrop: ['id', 'filename_disk'],
+                            title_image: ['id', 'filename_disk']
+                        }
+                    ]
+                }
+            ],
+            filter: { id: { _eq: id } }
+        })
+    );
+
+    if (episode.length === 0) {
+        return null;
+    }
+
+    const episodeData = episode[0];
+
+    const episodes = await directus.request(
+        readItems('episode', {
+            fields: ['id', 'title', 'slug'],
+            filter: { movie: { _eq: episodeData.movie.id } }
+        })
+    );
+
+    return {
+        ...episodeData,
+        movie: {
+            ...episodeData.movie,
+            episodes,
+            latest_episode: episodeData
+        }
+    };
+};

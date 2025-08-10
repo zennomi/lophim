@@ -1,24 +1,37 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+
+import { fetchEpisodeById } from '@/lib/directus/fetchers';
+import { getMovieUrlFromSlug } from '@/lib/utils';
 
 import FocusModButton from '../../../../components/rophim/xem-phim/focus-button';
 import Player from '../../../../components/rophim/xem-phim/player';
 import WatchContainer from '../../../../components/rophim/xem-phim/watch-container';
 import { ArrowLeft } from 'lucide-react';
 
-export default function XemPhimPage() {
+export default async function XemPhimPage({ params }: { params: { slug: string } }) {
+    const { slug } = await params;
+    const episodeId = slug.split('.')[1];
+    const episode = await fetchEpisodeById(Number(episodeId));
+    if (!episode) {
+        return notFound();
+    }
+
     return (
         <>
             <div id='wrapper' className='makeup wrapper-watch'>
                 <div className='watch-player'>
                     <div className='wp-bread line-center'>
-                        <Link className='btn btn-circle btn-outline me-2' href='/phim/superman.2oiIHdCZ'>
+                        <Link
+                            className='btn btn-circle btn-outline me-2'
+                            href={getMovieUrlFromSlug(episode.movie.slug)}>
                             <ArrowLeft />
                         </Link>
-                        <h2 className='heading-sm page-name !mb-0'>Xem phim Superman</h2>
+                        <h2 className='heading-sm page-name !mb-0'>Xem phim {episode.movie.title}</h2>
                     </div>
                     <div className='player-ratio'>
                         <div className='aspect-video'>
-                            <Player />
+                            <Player episode={episode} />
                         </div>
                         <div className='line-center player-control'>
                             <div className='line-center control-items'>
@@ -119,7 +132,7 @@ export default function XemPhimPage() {
                         </div>
                     </div>
                 </div>
-                <WatchContainer />
+                <WatchContainer episode={episode} />
             </div>
         </>
     );

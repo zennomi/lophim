@@ -3,8 +3,15 @@ import Link from 'next/link';
 import Actors from '@/components/rophim/actors';
 import CommentArea from '@/components/rophim/comment-area';
 import EpisodesList from '@/components/rophim/episodes-list';
+import RecommendMovies from '@/components/rophim/xem-phim/recommend-movies';
+import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
+import { fetchEpisodeById } from '@/lib/directus/fetchers';
+import { getMovieUrlFromSlug } from '@/lib/utils';
+import { DirectusFile } from '@directus/sdk';
 
-export default function WatchContainer() {
+type Episode = NonNullable<Awaited<ReturnType<typeof fetchEpisodeById>>>;
+
+export default function WatchContainer({ episode }: { episode: Episode }) {
     return (
         <div className='watch-container'>
             <div className='wc-main'>
@@ -12,69 +19,45 @@ export default function WatchContainer() {
                     <div className='v-thumb-l'>
                         <div className='v-thumbnail'>
                             <img
-                                alt='Xem Phim Superman Vietsub HD Online - Rophim'
+                                alt={episode.movie.title}
                                 loading='lazy'
-                                src='https://static.nutscdn.com/vimg/300-0/b987711629ddc4e21645a4e8af96e60d.webp'
+                                src={getDirectusAssetURL(episode.movie.poster as DirectusFile)}
                             />
                         </div>
                     </div>
                     <div className='info'>
                         <h2 className='heading-sm media-name'>
-                            <Link title='Superman' href='/phim/superman.2oiIHdCZ'>
-                                Superman
+                            <Link title={episode.movie.title} href={getMovieUrlFromSlug(episode.movie.slug)}>
+                                {episode.movie.title}
                             </Link>
                         </h2>
-                        <div className='alias-name'>Superman</div>
+                        <div className='alias-name'>{episode.movie.english_title}</div>
                         <div className='detail-more'>
                             <div className='hl-tags'>
                                 <div className='tag-imdb'>
-                                    <span>7.6</span>
+                                    <span>3.6</span>
                                 </div>
                                 <div className='tag-model'>
                                     <span className='last'>
-                                        <strong>T13</strong>
+                                        <strong>R18</strong>
                                     </span>
                                 </div>
                                 <div className='tag-classic'>
                                     <span>2025</span>
                                 </div>
-                                <div className='tag-classic'>
-                                    <span>2h 10m</span>
-                                </div>
-                                <div className='tag-classic'>CAM</div>
                             </div>
                             <div className='hl-tags'>
-                                <a className='tag-topic' href='/the-loai/hanh-dong.2xCjTG'>
-                                    Hành Động
-                                </a>
-                                <a className='tag-topic' href='/the-loai/chieu-rap.3679nF'>
-                                    Chiếu Rạp
-                                </a>
-                                <a className='tag-topic' href='/the-loai/dc.GNUW6k'>
-                                    DC
-                                </a>
-                                <a className='tag-topic' href='/the-loai/sieu-anh-hung.OW2M9i'>
-                                    Siêu Anh Hùng
-                                </a>
-                                <a className='tag-topic' href='/the-loai/khoa-hoc.Rqm5ON'>
-                                    Khoa Học
-                                </a>
-                                <a className='tag-topic' href='/the-loai/ky-ao.gVRG25'>
-                                    Kỳ Ảo
-                                </a>
-                                <a className='tag-topic' href='/the-loai/phieu-luu.wca3Bp'>
-                                    Phiêu Lưu
-                                </a>
+                                {episode.movie.tags?.map((tag) => (
+                                    <a className='tag-topic capitalize' key={tag}>
+                                        {tag}
+                                    </a>
+                                ))}
                             </div>
                         </div>
                     </div>
                     <div className='desc-line'>
-                        <div className='description lim-3'>
-                            Superman, một phóng viên tập sự ở Metropolis, bắt đầu cuộc hành trình dung hòa di sản
-                            Krypton trong bản thân mình với quá trình trưởng thành của con người với tư cách là Clark
-                            Kent.
-                        </div>
-                        <Link className='text-primary' href='/phim/superman.2oiIHdCZ'>
+                        <div className='description lim-3'>{episode.movie.overview}</div>
+                        <Link className='text-primary' href={getMovieUrlFromSlug(episode.movie.slug)}>
                             Thông tin phim{' '}
                             <span style={{ display: 'inline-flex', verticalAlign: 'middle' }}>
                                 {/* lucide-react: ChevronRight */}
@@ -96,7 +79,7 @@ export default function WatchContainer() {
                     </div>
                 </div>
                 <div className='wm-episodes'>
-                    <EpisodesList />
+                    <EpisodesList movie={episode.movie} currentEpisodeId={episode.id} />
                 </div>
                 <CommentArea />
             </div>
@@ -161,186 +144,7 @@ export default function WatchContainer() {
                             <span>Đề xuất cho bạn</span>
                         </div>
                         <div className='child-content'>
-                            <div className='cc-top'>
-                                <div className='item'>
-                                    <div className='h-item'>
-                                        <div className='v-thumb-m'>
-                                            <Link className='v-thumbnail' href='/phim/am-anh-dep-xinh.27bQ02F2'>
-                                                <img
-                                                    alt='Ám Ảnh Đẹp Xinh'
-                                                    src='https://static.nutscdn.com/vimg/300-0/4fce0bf5db68bb6af589f5e6a3126488.jpg'
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className='info'>
-                                            <h4 className='item-title lim-2'>
-                                                <Link title='Ám Ảnh Đẹp Xinh' href='/phim/am-anh-dep-xinh.27bQ02F2'>
-                                                    Ám Ảnh Đẹp Xinh
-                                                </Link>
-                                            </h4>
-                                            <div className='alias-title lim-1 mb-2'>Pretty Thing</div>
-                                            <div className='info-line'>
-                                                <div className='tag-small'>
-                                                    <strong>T16</strong>
-                                                </div>
-                                                <div className='tag-small'>2025</div>
-                                                <div className='tag-small'>1h 36m</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='item'>
-                                    <div className='h-item'>
-                                        <div className='v-thumb-m'>
-                                            <Link className='v-thumbnail' href='/phim/dang-toi-cao.9Av3Dzwe'>
-                                                <img
-                                                    alt='Đấng Tối Cao'
-                                                    src='https://static.nutscdn.com/vimg/300-0/37a154580b4c5b4bf3e51663a417b2e1.jpg'
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className='info'>
-                                            <h4 className='item-title lim-2'>
-                                                <Link title='Đấng Tối Cao' href='/phim/dang-toi-cao.9Av3Dzwe'>
-                                                    Đấng Tối Cao
-                                                </Link>
-                                            </h4>
-                                            <div className='alias-title lim-1 mb-2'>Sovereign</div>
-                                            <div className='info-line'>
-                                                <div className='tag-small'>
-                                                    <strong>T18</strong>
-                                                </div>
-                                                <div className='tag-small'>2025</div>
-                                                <div className='tag-small'>1h 40m</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='item'>
-                                    <div className='h-item'>
-                                        <div className='v-thumb-m'>
-                                            <Link
-                                                className='v-thumbnail'
-                                                href='/phim/zombies-4-binh-minh-ma-ca-rong.UcfPser5'>
-                                                <img
-                                                    alt='ZOMBIES 4: Bình Minh Ma Cà Rồng'
-                                                    src='https://static.nutscdn.com/vimg/300-0/043a962d1e2b39e5b39ca4df6ba433c6.jpg'
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className='info'>
-                                            <h4 className='item-title lim-2'>
-                                                <Link
-                                                    title='ZOMBIES 4: Bình Minh Ma Cà Rồng'
-                                                    href='/phim/zombies-4-binh-minh-ma-ca-rong.UcfPser5'>
-                                                    ZOMBIES 4: Bình Minh Ma Cà Rồng
-                                                </Link>
-                                            </h4>
-                                            <div className='alias-title lim-1 mb-2'>
-                                                Z-O-M-B-I-E-S 4: Dawn of the Vampires
-                                            </div>
-                                            <div className='info-line'>
-                                                <div className='tag-small'>
-                                                    <strong>T13</strong>
-                                                </div>
-                                                <div className='tag-small'>2025</div>
-                                                <div className='tag-small'>1h 28m</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='item'>
-                                    <div className='h-item'>
-                                        <div className='v-thumb-m'>
-                                            <Link className='v-thumbnail' href='/phim/madea-le-cuoi-kho-quen.hbhksAsf'>
-                                                <img
-                                                    alt='Madea: Lễ Cưới Khó Quên'
-                                                    src='https://static.nutscdn.com/vimg/300-0/b80fa52ce53b488f3a8ef46e97a7c441.jpg'
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className='info'>
-                                            <h4 className='item-title lim-2'>
-                                                <Link
-                                                    title='Madea: Lễ Cưới Khó Quên'
-                                                    href='/phim/madea-le-cuoi-kho-quen.hbhksAsf'>
-                                                    Madea: Lễ Cưới Khó Quên
-                                                </Link>
-                                            </h4>
-                                            <div className='alias-title lim-1 mb-2'>Madea's Destination Wedding</div>
-                                            <div className='info-line'>
-                                                <div className='tag-small'>
-                                                    <strong>T13</strong>
-                                                </div>
-                                                <div className='tag-small'>2025</div>
-                                                <div className='tag-small'>1h 42m</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='item'>
-                                    <div className='h-item'>
-                                        <div className='v-thumb-m'>
-                                            <Link className='v-thumbnail' href='/phim/superman.2oiIHdCZ'>
-                                                <img
-                                                    alt='Superman'
-                                                    src='https://static.nutscdn.com/vimg/300-0/4b3cdd803e3ca867776d04315e013142.webp'
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className='info'>
-                                            <h4 className='item-title lim-2'>
-                                                <Link title='Superman' href='/phim/superman.2oiIHdCZ'>
-                                                    Superman
-                                                </Link>
-                                            </h4>
-                                            <div className='alias-title lim-1 mb-2'>Superman</div>
-                                            <div className='info-line'>
-                                                <div className='tag-small'>
-                                                    <strong>T13</strong>
-                                                </div>
-                                                <div className='tag-small'>2025</div>
-                                                <div className='tag-small'>2h 10m</div>
-                                                <div className='tag-small'>CAM</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='item'>
-                                    <div className='h-item'>
-                                        <div className='v-thumb-m'>
-                                            <Link
-                                                className='v-thumbnail'
-                                                href='/phim/bo-tu-sieu-dang-buoc-di-dau-tien.7QVNq1a6'>
-                                                <img
-                                                    alt='Bộ Tứ Siêu Đẳng: Bước Đi Đầu Tiên'
-                                                    src='https://static.nutscdn.com/vimg/300-0/8d64bd725d28f1823c4aa207d7fbae86.jpg'
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className='info'>
-                                            <h4 className='item-title lim-2'>
-                                                <Link
-                                                    title='Bộ Tứ Siêu Đẳng: Bước Đi Đầu Tiên'
-                                                    href='/phim/bo-tu-sieu-dang-buoc-di-dau-tien.7QVNq1a6'>
-                                                    Bộ Tứ Siêu Đẳng: Bước Đi Đầu Tiên
-                                                </Link>
-                                            </h4>
-                                            <div className='alias-title lim-1 mb-2'>
-                                                The Fantastic Four: First Steps
-                                            </div>
-                                            <div className='info-line'>
-                                                <div className='tag-small'>
-                                                    <strong>T13</strong>
-                                                </div>
-                                                <div className='tag-small'>Sắp chiếu</div>
-                                                <div className='tag-small'>2025</div>
-                                                <div className='tag-small'>2h 10m</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <RecommendMovies />
                         </div>
                     </div>
                 </div>
