@@ -31,8 +31,8 @@ const TopSlider = ({ movies }: { movies: Movie[] }) => {
                     }}
                     loop={true}
                     className='top-slide-main'>
-                    {movies.map((movie) => (
-                        <SwiperSlide key={movie.id}>
+                    {movies.map((movie, index) => (
+                        <SwiperSlide key={index}>
                             <div className='slide-elements relative h-[600px] overflow-hidden'>
                                 <Link href={`/phim/${movie.slug}`} className='slide-url absolute inset-0 z-10' />
 
@@ -78,7 +78,7 @@ const TopSlider = ({ movies }: { movies: Movie[] }) => {
                                             {/* Alias Title */}
                                             <h3 className='media-alias-title'>
                                                 <Link href={`/phim/${movie.slug}`} className=''>
-                                                    {movie.title}
+                                                    {movie.english_title}
                                                 </Link>
                                             </h3>
 
@@ -152,8 +152,8 @@ const TopSlider = ({ movies }: { movies: Movie[] }) => {
                     slidesPerView={6}
                     watchSlidesProgress={true}
                     className='top-slide-small mt-4'>
-                    {movies.map((movie) => (
-                        <SwiperSlide key={movie.id}>
+                    {movies.map((movie, index) => (
+                        <SwiperSlide key={index}>
                             <img
                                 alt={movie.title}
                                 loading='lazy'

@@ -4,12 +4,15 @@ import { useEffect, useRef } from 'react';
 
 import Link from 'next/link';
 
+import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
 import { useMoviePopoverStore } from '@/lib/movie-popover-store';
+import { getEpisodeUrlFromSlug, getMovieUrlFromSlug } from '@/lib/utils';
+import { Episode } from '@/types/directus-schema';
 
 import { Play } from 'lucide-react';
 
 export default function MoviePopover() {
-    const { isVisible, movie, position, topics, hidePopover, setHovered } = useMoviePopoverStore();
+    const { isVisible, movie, position, hidePopover, setHovered } = useMoviePopoverStore();
     const popoverRef = useRef<HTMLDivElement>(null);
     const hideTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -55,19 +58,10 @@ export default function MoviePopover() {
         </svg>
     );
 
-    // Helper for play icon
-    const PlayIcon = (
-        <i
-            className='fa-solid fa-play'
-            style={{ marginRight: 4, fontSize: 14, display: 'inline-block', verticalAlign: 'middle' }}
-        />
-    );
-
     // Fallbacks for tags
-    const imdbRating = '8.6';
+    const imdbRating = '3.6';
     const year = new Date().getFullYear();
-    const part = movie.part || '';
-    const episode = movie.episode || '';
+    const episode = typeof movie.latest_episode === 'object' ? (movie.latest_episode as Episode) : null;
 
     return (
         <div
@@ -99,7 +93,7 @@ export default function MoviePopover() {
                 <div
                     className='media-teaser'
                     style={{
-                        backgroundImage: `url(${movie.image})`,
+                        backgroundImage: `url(${getDirectusAssetURL(movie.poster)})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         position: 'relative',
@@ -107,7 +101,7 @@ export default function MoviePopover() {
                     }}>
                     <div className='info'>
                         <div className='media-title-image'>
-                            <img alt={movie.title} src={movie.image} />
+                            <img alt={movie.title} src={getDirectusAssetURL(movie.title_image)} />
                         </div>
                     </div>
                     <div className='ratio ratio-16x9' />
@@ -115,10 +109,16 @@ export default function MoviePopover() {
                 <div className='media-item'>
                     <div className='video-title-group'>
                         <div className='media-title'>{movie.title}</div>
-                        <div className='alias-title'>{movie.aliasTitle}</div>
+                        <div className='alias-title'>{movie.english_title}</div>
                     </div>
                     <div className='touch-group'>
-                        <Link className='btn btn-block btn-primary' href={movie.href}>
+                        <Link
+                            className='btn btn-block btn-primary'
+                            href={
+                                episode
+                                    ? getEpisodeUrlFromSlug({ slug: movie.slug, id: episode.id })
+                                    : getMovieUrlFromSlug(movie.slug)
+                            }>
                             <Play size={14} />
                             Xem ngay
                         </Link>
@@ -126,7 +126,7 @@ export default function MoviePopover() {
                             <div className='inc-icon icon-14'>{HeartSVG}</div>
                             <span>Thích</span>
                         </a>
-                        <Link className='btn btn-outline' href={movie.href}>
+                        <Link className='btn btn-outline' href={getMovieUrlFromSlug(movie.slug)}>
                             <div className='inc-icon icon-14'>{InfoSVG}</div>
                             <span>Chi tiết</span>
                         </Link>
@@ -135,25 +135,24 @@ export default function MoviePopover() {
                         <div className='tag-imdb'>
                             <span>{imdbRating}</span>
                         </div>
-                        <div className='tag-model'>
+                        {/* <div className='tag-model'>
                             <span className='last'>
                                 <strong>{movie.rating}</strong>
                             </span>
-                        </div>
+                        </div> */}
                         <div className='tag-classic'>
                             <span>{year}</span>
                         </div>
-                        <div className='tag-classic'>
-                            <span>{part}</span>
-                        </div>
-                        <div className='tag-classic'>
-                            <span>{episode}</span>
-                        </div>
+                        {episode && (
+                            <div className='tag-classic'>
+                                <span>{episode.title}</span>
+                            </div>
+                        )}
                     </div>
-                    {topics.length > 0 && (
+                    {movie.tags && movie.tags.length > 0 && (
                         <div className='hl-tags'>
-                            {topics.slice(0, 6).map((topic, idx) => (
-                                <div className='tag-topic' key={idx}>
+                            {movie.tags.slice(0, 6).map((topic, idx) => (
+                                <div className='tag-topic capitalize' key={idx}>
                                     {topic}
                                 </div>
                             ))}

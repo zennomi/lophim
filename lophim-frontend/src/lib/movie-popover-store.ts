@@ -1,26 +1,13 @@
-import { create } from 'zustand';
+import { Movie } from '@/types/directus-schema';
 
-interface Movie {
-    id: string;
-    title: string;
-    aliasTitle: string;
-    image: string;
-    href: string;
-    rating: string;
-    part: string;
-    episode: string;
-    pinPd?: string;
-    pinTm?: string;
-    pinLt?: string;
-}
+import { create } from 'zustand';
 
 interface MoviePopoverState {
     isVisible: boolean;
     movie: Movie | null;
     position: { x: number; y: number };
-    topics: string[];
     hovered: boolean;
-    showPopover: (movie: Movie, position: { x: number; y: number }, topics: string[]) => void;
+    showPopover: (movie: Movie, position: { x: number; y: number }) => void;
     hidePopover: () => void;
     setHovered: (hovered: boolean) => void;
 }
@@ -29,14 +16,12 @@ export const useMoviePopoverStore = create<MoviePopoverState>((set) => ({
     isVisible: false,
     movie: null,
     position: { x: 0, y: 0 },
-    topics: [],
     hovered: false,
-    showPopover: (movie, position, topics) =>
+    showPopover: (movie, position) =>
         set({
             isVisible: true,
             movie,
-            position,
-            topics
+            position
         }),
     hidePopover: () =>
         set((state) => {
@@ -44,8 +29,7 @@ export const useMoviePopoverStore = create<MoviePopoverState>((set) => ({
                 return {
                     isVisible: false,
                     movie: null,
-                    position: { x: 0, y: 0 },
-                    topics: []
+                    position: { x: 0, y: 0 }
                 };
             }
 

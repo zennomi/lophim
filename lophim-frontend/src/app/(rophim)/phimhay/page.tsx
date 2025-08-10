@@ -1,4 +1,4 @@
-import { fetchTopMovies } from '@/lib/directus/fetchers';
+import { fetchNewMovies, fetchTopMovies } from '@/lib/directus/fetchers';
 import { Movie } from '@/types/directus-schema';
 
 import TopCollection from '../../../components/rophim/phimhay/top-collection';
@@ -12,11 +12,12 @@ import 'swiper/css/thumbs';
 
 export default async function PhimHay() {
     const topMovies = await fetchTopMovies();
+    const newMovies = await fetchNewMovies();
 
     return (
         <>
             <TopSlider movies={topMovies.movies.map((movie) => movie.item as Movie)} />
-            <TopCollection />
+            <TopCollection movies={newMovies as Movie[]} />
         </>
     );
 }

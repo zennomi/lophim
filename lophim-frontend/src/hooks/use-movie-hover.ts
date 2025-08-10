@@ -1,20 +1,7 @@
 import { useCallback, useRef } from 'react';
 
 import { useMoviePopoverStore } from '@/lib/movie-popover-store';
-
-interface Movie {
-    id: string;
-    title: string;
-    aliasTitle: string;
-    image: string;
-    href: string;
-    rating: string;
-    part: string;
-    episode: string;
-    pinPd?: string;
-    pinTm?: string;
-    pinLt?: string;
-}
+import { Movie } from '@/types/directus-schema';
 
 const TIMEOUT_MOUSE_LEAVE = 500;
 const TIMEOUT_MOUSE_ENTER = 300; // Delay before showing popover
@@ -25,7 +12,7 @@ export const useMovieHover = () => {
     const showTimeout = useRef<NodeJS.Timeout | null>(null);
 
     const handleMouseEnter = useCallback(
-        (event: React.MouseEvent, movie: Movie, topics: string[]) => {
+        (event: React.MouseEvent, movie: Movie) => {
             if (hideTimeout.current) {
                 clearTimeout(hideTimeout.current);
             }
@@ -51,7 +38,7 @@ export const useMovieHover = () => {
             }
 
             showTimeout.current = setTimeout(() => {
-                showPopover(movie, { x, y }, topics);
+                showPopover(movie, { x, y });
             }, TIMEOUT_MOUSE_ENTER);
         },
         [showPopover, setHovered]

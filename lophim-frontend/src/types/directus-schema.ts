@@ -8,7 +8,12 @@ export interface Episode {
 	youtube_id: string;
 	/** @required */
 	movie: Movie | string;
-	token?: string | null;
+	/** @required */
+	token: string;
+	/** @required */
+	title: string;
+	/** @required */
+	slug: string;
 }
 
 export interface Movie {
@@ -29,6 +34,7 @@ export interface Movie {
 	/** @required */
 	slug: string;
 	overview?: string | null;
+	latest_episode?: Episode | string | null;
 }
 
 export interface MovieFile {
