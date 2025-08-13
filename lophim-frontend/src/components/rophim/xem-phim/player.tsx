@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
+import Image from 'next/image';
+
+import logo from '@/app/(rophim)/assets/logo.svg';
 import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
 import { fetchEpisodeById } from '@/lib/directus/fetchers';
 import { cn } from '@/lib/utils';
@@ -35,7 +38,7 @@ export default function Player({ episode }: { episode: Episode }) {
 
             <div id='body-load' className={cn(ready && 'hidden')}>
                 <div className='bl-logo'>
-                    <img src='https://www.rophim.me/images/logo.svg' alt='logo' />
+                    <Image src={logo} alt='logo' />
                     <div className='text-h1 text-center'>
                         Xem Phim Miễn Phí Cực Nhanh, Chất Lượng Cao Và Cập Nhật Liên Tục
                     </div>
